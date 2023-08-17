@@ -13,15 +13,15 @@ const cosas = require("./router/ruta-cosas");
 const caja = require("./router/ruta-caja");
 const cors = require("cors");
 const corsOptions = {
-  origin: "http://localhost:3000", 
+  origin: "http://localhost:3000",
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
   optionsSuccessStatus: 204,
 };
 
 app.use(cors(corsOptions));
+app.use(express.json());
 
-app.use(cors());
 app.use("/api/usuarios", usuario);
 app.use("/api/casas/", casa);
 app.use("/api/habitaciones/", habitacion);
