@@ -71,66 +71,60 @@ router.post("/nuevo", autorizacion, async (req, res, next) => {
   let existeHabitacion = await Habitacion.findOne({ nombre: habitacion });
   let existeCasa = await Casa.findOne({ nombre: casa });
 
-  if (existeCasa) {
-    const cosa = new Cosa({
-      nombre,
-      descripcion,
-      clasificacion,
-      nombreCajon: existeCajon ? existeCajon.nombre : null,
-      nombreArmario: existeArmario ? existeArmario.nombre : null,
-      nombreHabitacion: existeHabitacion ? existeHabitacion.nombre : null,
-      nombreCasa: existeCasa.nombre,
-      cajon: existeCajon ? existeCajon._id : null,
-      armario: existeArmario ? existeArmario._id : null,
-      habitacion: existeHabitacion ? existeHabitacion._id : null,
-      casa: existeCasa._id,
-      usuario: usuarioId,
-    });
+  const cosa = new Cosa({
+    nombre,
+    descripcion,
+    clasificacion,
+    nombreCajon: existeCajon ? existeCajon.nombre : null,
+    nombreArmario: existeArmario ? existeArmario.nombre : null,
+    nombreHabitacion: existeHabitacion ? existeHabitacion.nombre : null,
+    nombreCasa: existeCasa.nombre,
+    cajon: existeCajon ? existeCajon._id : null,
+    armario: existeArmario ? existeArmario._id : null,
+    habitacion: existeHabitacion ? existeHabitacion._id : null,
+    casa: existeCasa._id,
+    usuario: usuarioId,
+  });
 
-    try {
-      const cosaGuardada = await cosa.save();
-      if (existeCajon) {
-        const cosaCajon = await Cajon.findOneAndUpdate(
-          { nombre: cajon },
-          { $push: { cosas: cosa._id } },
-          { new: true }
-        );
-      }
-      if (existeArmario) {
-        const cosaArmario = await Armario.findOneAndUpdate(
-          { nombre: armario },
-          { $push: { cosas: cosa._id } },
-          { new: true }
-        );
-      }
-      if (existeHabitacion) {
-        const cosaHabitacion = await Habitacion.findOneAndUpdate(
-          { nombre: habitacion },
-          { $push: { cosas: cosa._id } },
-          { new: true }
-        );
-      }
-      if (existeCasa) {
-        const cosaCasa = await Casa.findOneAndUpdate(
-          { nombre: casa },
-          { $push: { cosas: cosaGuardada._id } },
-          { new: true }
-        );
-      } else {
-        res.json({ message: "Debe de estar en alguna ubicación" });
-        return next();
-      }
-
-      res.json(cosaGuardada);
-    } catch (err) {
-      res.json({ message: err });
+  try {
+    const cosaGuardada = await cosa.save();
+    if (existeCajon) {
+      const cosaCajon = await Cajon.findOneAndUpdate(
+        { nombre: cajon },
+        { $push: { cosas: cosa._id } },
+        { new: true }
+      );
     }
-  } else {
-    res.json({ message: "La casa no existe" });
-    return next();
+    if (existeArmario) {
+      const cosaArmario = await Armario.findOneAndUpdate(
+        { nombre: armario },
+        { $push: { cosas: cosa._id } },
+        { new: true }
+      );
+    }
+    if (existeHabitacion) {
+      const cosaHabitacion = await Habitacion.findOneAndUpdate(
+        { nombre: habitacion },
+        { $push: { cosas: cosa._id } },
+        { new: true }
+      );
+    }
+    if (existeCasa) {
+      const cosaCasa = await Casa.findOneAndUpdate(
+        { nombre: casa },
+        { $push: { cosas: cosaGuardada._id } },
+        { new: true }
+      );
+    } else {
+      res.json({ message: "Debe de estar en alguna ubicación" });
+      return next();
+    }
+
+    res.json(cosaGuardada);
+  } catch (err) {
+    res.json({ message: err });
   }
 });
-
 
 //*MODIFICAR COSA
 
