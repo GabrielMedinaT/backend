@@ -2,6 +2,12 @@ const mongoose = require("mongoose");
 const Habitacion = require("../models/model-habit");
 
 const armarioSchema = new mongoose.Schema({
+  tipo: {
+    type: String,
+    required: true,
+    minLenght: 3,
+    maxLenght: 20,
+  },
   nombre: {
     type: String,
     required: true,
